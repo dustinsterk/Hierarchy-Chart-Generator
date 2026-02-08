@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hierarchy Chart Generator</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Hierarchy Chart Generator</h1>
+            <p class="subtitle">Upload a CSV file to visualize your hierarchy or click 'Create New Graph' to start with an empty chart.</p>
+        </header>
+
+        <div class="upload-section">
+            <div class="upload-box" id="uploadBox">
+                <input type="file" id="csvFile" accept=".csv" style="display: none;">
+                <div class="upload-label" id="uploadLabel">
+                    <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                        <polyline points="17 8 12 3 7 8"></polyline>
+                        <line x1="12" y1="3" x2="12" y2="15"></line>
+                    </svg>
+                    <span>Click to upload or drag and drop CSV file</span>
+                </div>
+            </div>
+            <div class="file-info" id="fileInfo" style="display: none;">
+                <span id="fileName"></span>
+                <button class="btn-remove" id="removeFile">×</button>
+            </div>
+            <div class="create-graph">
+                <a href="#" id="createNewGraph">Create New Graph</a>
+            </div>
+        </div>
+
+        <div class="instructions">
+            <details open>
+                <summary><h3 style="display: inline;">CSV Format:</h3></summary>
+                <div style="margin-top: 15px;">
+                    <p>Your CSV should have columns: <code>name</code>, <code>parent_id</code></p>
+                    <p><strong>Note:</strong> The system uses <code>name</code> as the unique identifier. <code>parent_id</code> should match the full name of the parent node.</p>
+                    <p>Additional metadata columns are supported: <code>title</code>, <code>location</code>, <code>phone</code>, <code>email</code>, etc.</p>
+                    <p><code>parent_id</code> should be empty or "null" for root nodes</p>
+                    <details>
+                        <summary>Example CSV</summary>
+                        <pre>name,parent_id,title,location,phone,email
+CEO,,Chief Executive Officer,New York,555-0100,ceo@company.com
+VP Engineering,CEO,Vice President,San Francisco,555-0101,vpeng@company.com
+VP Sales,CEO,Vice President,Chicago,555-0102,vpsales@company.com
+Engineering Manager,VP Engineering,Manager,San Francisco,555-0103,engmgr@company.com
+QA Manager,VP Engineering,Manager,San Francisco,555-0104,qamgr@company.com
+Sales Manager,VP Sales,Manager,Chicago,555-0105,salesmgr@company.com</pre>
+                    </details>
+                    <div style="margin-top: 15px; padding-top: 15px; border-top: 1px solid #ddd;">
+                        <h4>Edit Mode Features:</h4>
+                        <ul style="margin-left: 20px; margin-top: 10px;">
+                            <li>Click and drag nodes to reposition them</li>
+                            <li>Dragging nodes does not change parent-child relationships</li>
+                            <li>Select a node to see resize handles in the corners</li>
+                            <li>Drag resize handles to change node size</li>
+                        </ul>
+                    </div>
+                </div>
+            </details>
+        </div>
+
+        <div class="chart-container" id="chartContainer" style="display: none;">
+            <div class="chart-controls">
+                <div class="control-group">
+                    <button class="btn" id="zoomIn">Zoom In</button>
+                    <button class="btn" id="zoomOut">Zoom Out</button>
+                    <button class="btn" id="resetZoom">Reset</button>
+                    <label>💡 Scroll mouse to zoom in and out</label>
+                </div>
+                <div class="control-group edit-layout-group">
+                    <span class="edit-layout-hint">Press Edit Layout to modify the chart</span>
+                    <button class="btn btn-primary" id="editModeToggle">Edit Layout: OFF</button>
+                    <button class="btn" id="downloadChart">Download Chart</button>
+                    <button class="btn btn-success" id="saveCSV">Save CSV</button>
+                </div>
+            </div>
+            <div class="style-controls" id="styleControls" style="display: none;">
+                <details class="style-controls-details" id="styleSettingsDetails">
+                    <summary class="style-controls-summary">Style Settings (Expand to see options)</summary>
+                    <div class="style-controls-content">
+                        <div class="style-section">
+                            <h4>Node Colors</h4>
+                            <div class="style-row">
+                                <label>All Nodes:</label>
+                                <input type="color" id="globalNodeColor" value="#667eea">
+                                <button type="button" class="btn btn-sm" id="applyGlobalColor">Apply to All</button>
+                            </div>
+                            <div class="style-row">
+                                <label>Selected Nodes (<span id="selectedCount">0</span>):</label>
+                                <input type="color" id="selectedNodeColor" value="#667eea">
+                                <button type="button" class="btn btn-sm" id="applySelectedColor">Apply to Selected</button>
+                            </div>
+                            <div class="style-hint">
+                                <small>💡 Click and hold to select multiple nodes or use cmd/ctrl</small>
+                            </div>
+                        </div>
+                        <div class="style-section">
+                            <h4>Font Settings</h4>
+                            <div class="style-row">
+                                <label>Font Family:</label>
+                                <select id="fontFamily">
+                                    <option value="Arial, sans-serif">Arial</option>
+                                    <option value="Helvetica, sans-serif">Helvetica</option>
+                                    <option value="'Times New Roman', serif">Times New Roman</option>
+                                    <option value="Georgia, serif">Georgia</option>
+                                    <option value="'Courier New', monospace">Courier New</option>
+                                    <option value="Verdana, sans-serif" selected>Verdana</option>
+                                    <option value="'Trebuchet MS', sans-serif">Trebuchet MS</option>
+                                    <option value="Impact, sans-serif">Impact</option>
+                                </select>
+                                <button type="button" class="btn btn-sm" id="applyFontFamily">Apply</button>
+                            </div>
+                            <div class="style-row">
+                                <label>Font Size:</label>
+                                <input type="number" id="fontSize" value="12" min="8" max="24" step="1">
+                                <span>px</span>
+                                <button type="button" class="btn btn-sm" id="applyFontSize">Apply</button>
+                            </div>
+                        </div>
+                    </div>
+                </details>
+            </div>
+            <div class="style-controls" id="displayControls" style="display: none;">
+                <details class="style-controls-details" id="displaySettingsDetails">
+                    <summary class="style-controls-summary">Display Settings (Expand to see options)</summary>
+                    <div class="style-controls-content">
+                        <div class="style-section">
+                            <div class="style-row">
+                                <label for="depthSetting" style="min-width: 120px;">Max Depth:</label>
+                                <input type="number" id="depthSetting" value="" min="1" max="20" placeholder="All" style="width: 80px; padding: 6px 8px; border: 1px solid #ddd; border-radius: 4px; font-size: 14px;">
+                                <span style="color: #666; font-size: 0.9em;">(Leave empty for all levels)</span>
+                            </div>
+                            <div class="style-row" style="margin-top: 12px;">
+                                <label for="hideNonParents" style="min-width: 120px;">Hide Leaf Nodes:</label>
+                                <input type="checkbox" id="hideNonParents" style="width: 18px; height: 18px; cursor: pointer;">
+                                <span style="color: #666; font-size: 0.9em;">(Nodes without children)</span>
+                            </div>
+                            <div class="style-row" id="graceDepthRow" style="margin-top: 12px;">
+                                <label for="graceDepth" style="min-width: 120px;">Grace Depth:</label>
+                                <input type="number" id="graceDepth" value="2" min="0" max="10" style="width: 80px; padding: 6px 8px; border: 1px solid #ddd; border-radius: 4px; font-size: 14px;">
+                                <span style="color: #666; font-size: 0.9em;">Levels to keep leaf nodes visible</span>
+                            </div>
+                            <div class="style-row" style="margin-top: 20px; padding-top: 15px; border-top: 1px solid #e0e0e0;">
+                                <button class="btn btn-warning btn-sm" id="autoArrange" style="margin-left: 0;">Auto Arrange</button>
+                                <button class="btn btn-sm" id="addNode">Add Node</button>
+                            </div>
+                        </div>
+                    </div>
+                </details>
+            </div>
+            <div class="main-content">
+                <div class="chart-wrapper" id="chartWrapper">
+                    <svg id="chartSvg"></svg>
+                    <div class="drop-indicator" id="dropIndicator" style="display: none;"></div>
+                    <div class="resize-handle-chart resize-handle-corner" title="Drag to resize chart"></div>
+                </div>
+                <div class="metadata-panel" id="metadataPanel">
+                    <div class="metadata-header">
+                        <h3>Node Details</h3>
+                        <button class="btn-close" id="closeMetadata">×</button>
+                    </div>
+                    <div class="metadata-content" id="metadataContent">
+                        <p class="no-selection">Click on a node to view/edit details</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="error-message" id="errorMessage" style="display: none;"></div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

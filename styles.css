@@ -1,0 +1,903 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    min-height: 100vh;
+    padding: 0;
+    margin: 0;
+    color: #333;
+}
+
+.container {
+    width: 100%;
+    margin: 0;
+    background: white;
+    border-radius: 0;
+    box-shadow: none;
+    padding: 20px;
+    min-height: 100vh;
+}
+
+header {
+    text-align: center;
+    margin-bottom: 40px;
+}
+
+/* Hide header, upload section, and instructions in edit mode */
+.chart-container.edit-mode ~ .upload-section,
+.chart-container.edit-mode ~ .instructions,
+body:has(.chart-container.edit-mode) header,
+body:has(.chart-container.edit-mode) .upload-section,
+body:has(.chart-container.edit-mode) .instructions {
+    display: none !important;
+}
+
+/* Alternative approach using container class */
+.container:has(.chart-container.edit-mode) header,
+.container:has(.chart-container.edit-mode) .upload-section,
+.container:has(.chart-container.edit-mode) .instructions {
+    display: none !important;
+}
+
+header h1 {
+    font-size: 2.5em;
+    color: #667eea;
+    margin-bottom: 10px;
+}
+
+.subtitle {
+    color: #666;
+    font-size: 1.1em;
+}
+
+.upload-section {
+    margin-bottom: 30px;
+}
+
+.upload-box {
+    border: 3px dashed #667eea;
+    border-radius: 12px;
+    padding: 60px 20px;
+    text-align: center;
+    background: #f8f9ff;
+    transition: all 0.3s ease;
+    position: relative;
+}
+
+.upload-box:hover {
+    background: #f0f2ff;
+    border-color: #764ba2;
+    transform: translateY(-2px);
+}
+
+.upload-box.dragover {
+    background: #e8ebff;
+    border-color: #764ba2;
+    transform: scale(1.02);
+}
+
+.upload-label {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 15px;
+    cursor: pointer;
+    color: #667eea;
+    pointer-events: auto;
+}
+
+.upload-label:hover {
+    opacity: 0.8;
+}
+
+.upload-label svg {
+    stroke: #667eea;
+}
+
+.upload-label span:first-of-type {
+    font-size: 1.2em;
+    font-weight: 600;
+}
+
+.file-hint {
+    font-size: 0.9em;
+    color: #999;
+    font-weight: normal;
+}
+
+.file-info {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 15px 20px;
+    background: #e8f5e9;
+    border-radius: 8px;
+    margin-top: 15px;
+}
+
+.create-graph {
+    text-align: center;
+    margin-top: 12px;
+}
+
+.create-graph a {
+    color: #667eea;
+    font-weight: 600;
+    text-decoration: underline;
+    cursor: pointer;
+}
+
+.create-graph a:hover {
+    color: #764ba2;
+}
+
+.file-info span {
+    color: #2e7d32;
+    font-weight: 500;
+}
+
+.btn-remove {
+    background: #f44336;
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 30px;
+    height: 30px;
+    font-size: 20px;
+    cursor: pointer;
+    line-height: 1;
+    transition: background 0.2s;
+}
+
+.btn-remove:hover {
+    background: #d32f2f;
+}
+
+.instructions {
+    background: #f5f5f5;
+    padding: 20px;
+    border-radius: 8px;
+    margin-bottom: 30px;
+    border-left: 4px solid #667eea;
+}
+
+.instructions h3 {
+    margin-bottom: 10px;
+    color: #667eea;
+}
+
+.instructions p {
+    margin-bottom: 8px;
+    line-height: 1.6;
+}
+
+.instructions code {
+    background: #e0e0e0;
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-family: 'Courier New', monospace;
+}
+
+.instructions details {
+    margin-top: 15px;
+}
+
+.instructions summary {
+    cursor: pointer;
+    font-weight: 600;
+    color: #667eea;
+    margin-bottom: 10px;
+}
+
+.instructions summary h3 {
+    margin: 0;
+    display: inline;
+}
+
+.instructions pre {
+    background: #fff;
+    padding: 15px;
+    border-radius: 4px;
+    overflow-x: auto;
+    margin-top: 10px;
+    border: 1px solid #ddd;
+}
+
+.chart-container {
+    margin-top: 30px;
+}
+
+.style-controls {
+    display: flex;
+    gap: 30px;
+    margin-top: 20px;
+    padding: 0;
+    background: transparent;
+    border-radius: 8px;
+    border: none;
+    flex-wrap: wrap;
+}
+
+.style-controls-details {
+    width: 100%;
+    background: #f8f9ff;
+    border-radius: 8px;
+    border: 1px solid #e0e0e0;
+    padding: 0;
+}
+
+.style-controls-summary {
+    padding: 15px 20px;
+    cursor: pointer;
+    font-weight: 600;
+    color: #667eea;
+    list-style: none;
+    user-select: none;
+}
+
+.style-controls-summary::-webkit-details-marker {
+    display: none;
+}
+
+.style-controls-summary::before {
+    content: '▼ ';
+    display: inline-block;
+    margin-right: 8px;
+    transition: transform 0.2s;
+}
+
+.style-controls-details[open] .style-controls-summary::before {
+    transform: rotate(180deg);
+}
+
+.style-controls-content {
+    display: flex;
+    gap: 30px;
+    padding: 20px;
+    flex-wrap: wrap;
+}
+
+.style-controls-content .style-section {
+    flex: 1;
+    min-width: 250px;
+}
+
+.style-section h4 {
+    margin: 0 0 15px 0;
+    color: #667eea;
+    font-size: 1em;
+}
+
+.style-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 12px;
+}
+
+.style-row label {
+    min-width: 100px;
+    font-weight: 500;
+    color: #555;
+    font-size: 0.9em;
+}
+
+.style-row input[type="color"] {
+    width: 50px;
+    height: 35px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.style-row input[type="number"] {
+    width: 60px;
+    padding: 6px 8px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 14px;
+}
+
+.style-row select {
+    padding: 6px 8px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 14px;
+    flex: 1;
+    min-width: 150px;
+}
+
+.btn-sm {
+    padding: 6px 12px;
+    font-size: 12px;
+}
+
+.style-hint {
+    margin-top: 10px;
+    padding: 8px;
+    background: #e3f2fd;
+    border-radius: 4px;
+    color: #1976d2;
+    font-size: 0.85em;
+}
+
+.multi-selection-info {
+    padding: 10px;
+}
+
+.multi-selection-info h4 {
+    margin: 0 0 10px 0;
+    color: #667eea;
+}
+
+.multi-selection-info ul {
+    list-style: none;
+    padding-left: 0;
+}
+
+.multi-selection-info li {
+    padding: 5px 10px;
+    margin: 5px 0;
+    background: #f5f5f5;
+    border-radius: 4px;
+    border-left: 3px solid #667eea;
+}
+
+.chart-controls {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+    justify-content: space-between;
+}
+
+.edit-layout-group {
+    position: relative;
+    align-items: center;
+}
+
+.edit-layout-hint {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    font-size: 12px;
+    color: #555;
+    background: #f5f5f5;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    padding: 6px 10px;
+    margin-right: 24px;
+    white-space: nowrap;
+}
+
+.edit-layout-hint::after {
+    content: "";
+    position: absolute;
+    right: -16px;
+    top: 50%;
+    width: 12px;
+    height: 1px;
+    background: #999;
+    transform: translateY(-50%);
+}
+
+.edit-layout-hint::before {
+    content: "";
+    position: absolute;
+    right: -22px;
+    top: 50%;
+    border: 4px solid transparent;
+    border-left-color: #999;
+    transform: translateY(-50%);
+}
+
+.chart-container.edit-mode .edit-layout-hint {
+    display: none;
+}
+
+.style-controls {
+    margin-bottom: 20px;
+}
+
+.control-group {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.grace-depth-disabled {
+    opacity: 0.6;
+    pointer-events: none;
+}
+
+.btn {
+    padding: 10px 20px;
+    background: #667eea;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 500;
+    transition: all 0.2s;
+}
+
+.btn:hover {
+    background: #5568d3;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.btn:active {
+    transform: translateY(0);
+}
+
+.btn-primary {
+    background: #764ba2;
+}
+
+.btn-primary:hover {
+    background: #8e5fb3;
+}
+
+.btn-primary.active {
+    background: #f44336;
+}
+
+.btn-primary.active:hover {
+    background: #d32f2f;
+}
+
+.btn-success {
+    background: #4caf50;
+}
+
+.btn-success:hover {
+    background: #45a049;
+}
+
+.btn-warning {
+    background: #ff9800;
+}
+
+.btn-warning:hover {
+    background: #f57c00;
+}
+
+.main-content {
+    display: flex;
+    gap: 20px;
+    align-items: flex-start;
+}
+
+.chart-wrapper {
+    border: 2px solid #e0e0e0;
+    border-radius: 8px;
+    overflow: auto;
+    overflow-x: auto;
+    overflow-y: auto;
+    background: #fafafa;
+    min-height: 500px;
+    height: 500px;
+    position: relative;
+    flex: 1;
+    scrollbar-width: thin;
+    scrollbar-color: #667eea #f0f0f0;
+    resize: both;
+}
+
+/* Custom resize indicator for chart wrapper */
+.resize-handle-chart {
+    position: absolute;
+    pointer-events: none;
+    z-index: 5;
+}
+
+.resize-handle-corner {
+    right: 0;
+    bottom: 0;
+    width: 20px;
+    height: 20px;
+    cursor: nwse-resize;
+    pointer-events: auto;
+    background: linear-gradient(-45deg, transparent 35%, #667eea 35%, #667eea 40%, transparent 40%, transparent 60%, #667eea 60%, #667eea 65%, transparent 65%);
+    border-radius: 0 0 8px 0;
+    opacity: 0.6;
+    transition: opacity 0.2s;
+}
+
+.resize-handle-corner:hover {
+    opacity: 1;
+}
+
+.resize-handle-right,
+.resize-handle-bottom {
+    display: none; /* Hide these, use CSS resize instead */
+}
+
+/* Ensure scrolling always works, especially in edit mode */
+.chart-wrapper.edit-mode,
+.edit-mode .chart-wrapper {
+    overflow: auto !important;
+    overflow-x: auto !important;
+    overflow-y: auto !important;
+}
+
+.chart-wrapper::-webkit-scrollbar {
+    width: 12px;
+    height: 12px;
+}
+
+.chart-wrapper::-webkit-scrollbar-track {
+    background: #f0f0f0;
+    border-radius: 6px;
+}
+
+.chart-wrapper::-webkit-scrollbar-thumb {
+    background: #667eea;
+    border-radius: 6px;
+}
+
+.chart-wrapper::-webkit-scrollbar-thumb:hover {
+    background: #5568d3;
+}
+
+.drop-indicator {
+    position: absolute;
+    border: 3px dashed #4caf50;
+    background: rgba(76, 175, 80, 0.1);
+    border-radius: 8px;
+    pointer-events: none;
+    z-index: 1000;
+}
+
+.metadata-panel {
+    width: 350px;
+    background: white;
+    border: 2px solid #e0e0e0;
+    border-radius: 8px;
+    display: flex;
+    flex-direction: column;
+    max-height: 600px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    transition: display 0.2s;
+}
+
+.metadata-header {
+    padding: 15px 20px;
+    border-bottom: 2px solid #e0e0e0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: #f8f9ff;
+}
+
+.metadata-header h3 {
+    margin: 0;
+    color: #667eea;
+    font-size: 1.2em;
+}
+
+.btn-close {
+    background: transparent;
+    border: none;
+    font-size: 24px;
+    color: #999;
+    cursor: pointer;
+    line-height: 1;
+    padding: 0;
+    width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 4px;
+    transition: all 0.2s;
+}
+
+.btn-close:hover {
+    background: #f0f0f0;
+    color: #333;
+}
+
+.metadata-content {
+    padding: 20px;
+    overflow-y: auto;
+    flex: 1;
+}
+
+.no-selection {
+    color: #999;
+    text-align: center;
+    padding: 40px 20px;
+    font-style: italic;
+}
+
+.metadata-form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.form-group label {
+    font-weight: 600;
+    color: #555;
+    font-size: 0.9em;
+}
+
+.form-group input,
+.form-group textarea {
+    padding: 8px 12px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 14px;
+    font-family: inherit;
+    transition: border-color 0.2s;
+}
+
+.form-group input:focus,
+.form-group textarea:focus {
+    outline: none;
+    border-color: #667eea;
+    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+}
+
+.form-group textarea {
+    resize: vertical;
+    min-height: 60px;
+}
+
+.form-actions {
+    display: flex;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+.form-actions .btn {
+    flex: 1;
+    padding: 8px 16px;
+    font-size: 13px;
+}
+
+#chartSvg {
+    display: block;
+    width: 100%;
+    height: 100%;
+}
+
+/* In edit mode, ensure SVG can extend beyond wrapper for scrolling */
+.edit-mode #chartSvg {
+    min-width: 100%;
+    min-height: 100%;
+    width: auto;
+    height: auto;
+}
+
+.node {
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.node.dragging {
+    opacity: 0.5;
+    cursor: grabbing;
+}
+
+.node.selected rect {
+    stroke: #4caf50;
+    stroke-width: 4;
+    filter: drop-shadow(0 0 8px rgba(76, 175, 80, 0.6));
+}
+
+.node.drag-over rect {
+    stroke: #ff9800;
+    stroke-width: 3;
+    fill: #fff3cd;
+}
+
+.node.drag-over text {
+    fill: #333;
+}
+
+.edit-mode .node {
+    cursor: grab;
+}
+
+.edit-mode .node:active {
+    cursor: grabbing;
+}
+
+.edit-mode .node.dragging {
+    cursor: grabbing;
+    opacity: 0.8;
+}
+
+.edit-mode .node .node-rect {
+    cursor: grab;
+}
+
+.edit-mode .node:active .node-rect {
+    cursor: grabbing;
+}
+
+/* Ensure scrolling works in edit mode */
+.edit-mode .chart-wrapper {
+    overflow: auto !important;
+    overflow-x: auto !important;
+    overflow-y: auto !important;
+}
+
+.edit-mode #chartSvg {
+    pointer-events: auto;
+    cursor: grab;
+}
+
+.edit-mode #chartSvg:active {
+    cursor: grabbing;
+}
+
+.resize-handle {
+    pointer-events: all;
+    opacity: 0.8;
+}
+
+.resize-handle:hover {
+    opacity: 1;
+    stroke-width: 2;
+}
+
+.node.selected .resize-handle {
+    display: block;
+}
+
+.node rect {
+    stroke-width: 2;
+    rx: 8;
+    transition: all 0.2s;
+}
+
+.node:hover rect {
+    stroke-width: 4;
+    stroke: #667eea;
+    filter: drop-shadow(0 4px 8px rgba(102, 126, 234, 0.4));
+}
+
+.node text {
+    fill: white;
+    /* font-size removed - controlled by JavaScript attribute */
+    font-weight: 500;
+    text-anchor: middle;
+    dominant-baseline: middle;
+    pointer-events: none;
+}
+
+.node.root text,
+.node.root .node-text-group text {
+    fill: white !important;
+}
+
+/* Child count text should always be black, even for root nodes */
+.node.root .child-count-text {
+    fill: #000000 !important;
+    color: #000000 !important;
+}
+
+/* Child count text should always be black, not affected by .node text rule */
+.node .child-count-text,
+.node.root .child-count-text,
+.node[data-root-child-count="true"],
+text.child-count-text {
+    fill: #000000 !important;
+    color: #000000 !important;
+}
+
+.node .node-name {
+    /* font-size removed - controlled by JavaScript attribute */
+    font-weight: 600;
+}
+
+.node .node-title {
+    /* font-size removed - controlled by JavaScript attribute */
+    font-weight: 400;
+    opacity: 0.95;
+}
+
+.node .node-location {
+    /* font-size removed - controlled by JavaScript attribute */
+    font-weight: 400;
+    opacity: 0.85;
+}
+
+.child-count-badge {
+    pointer-events: none;
+}
+
+.child-count-text {
+    pointer-events: none;
+    user-select: none;
+    fill: #000000 !important;
+    color: #000000 !important;
+}
+
+/* Root node fill color is now controlled by JavaScript, not CSS */
+
+.node.root:hover rect {
+    stroke-width: 4;
+    stroke: #764ba2;
+    filter: drop-shadow(0 4px 8px rgba(118, 75, 162, 0.4));
+}
+
+.link {
+    fill: none;
+    stroke: #999;
+    stroke-width: 2;
+    marker-end: url(#arrowhead);
+}
+
+.error-message {
+    background: #ffebee;
+    color: #c62828;
+    padding: 15px 20px;
+    border-radius: 8px;
+    border-left: 4px solid #c62828;
+    margin-top: 20px;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+    .container {
+        padding: 15px;
+    }
+
+    header h1 {
+        font-size: 2em;
+    }
+
+    .chart-controls {
+        flex-direction: column;
+    }
+
+    .control-group {
+        width: 100%;
+    }
+    
+    .edit-layout-hint {
+        width: 100%;
+        justify-content: center;
+        margin-right: 0;
+    }
+    
+    .edit-layout-hint::before,
+    .edit-layout-hint::after {
+        display: none;
+    }
+
+    .btn {
+        flex: 1;
+    }
+
+    .main-content {
+        flex-direction: column;
+    }
+
+    .metadata-panel {
+        width: 100%;
+        max-height: 300px;
+    }
+    
+    .chart-wrapper {
+        min-height: 400px !important;
+        height: 400px !important;
+    }
+}
