@@ -14,12 +14,12 @@ Features include:
 * Quick updates of both node data and parent selection via Node Details.
 * Ability to add and delete nodes.
 * Functionality to auto arranging nodes.
-* Manual node arrangment via click/drag of any node element (children nodes stay in place when moving a parent).
-* Visual parent node indicator to show the number of direct reports via a UI 'bubble'.
+* Manual node arrangment via click/drag of any node element (children nodes stay in position when moving a parent).
+* Visual parent node indicator to show the number of children nodes via a UI 'bubble'.
 * Calculation of total number of decendant nodes when a parent node is highlighted (found in Node Details).
 * Zooming and repositioning capabilites within the chart canvas.
 * Exporting of the chart into .svg format.
-* Saving the chart as an updated .csv datafile with all positions and colors included.
+* Saving the chart as an updated .csv datafile with all node positions and colors included.
 
 
 <img width="1719" height="846" alt="Tree and Node Editing" src="https://github.com/user-attachments/assets/c4ee5d35-f406-43ff-82de-9c6794097deb" />
