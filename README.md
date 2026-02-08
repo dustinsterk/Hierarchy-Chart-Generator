@@ -24,8 +24,9 @@ Once you load a .csv file or create a new chart, press the purple "Edit Layout" 
 
 <img width="1719" height="846" alt="Tree and Node Editing" src="https://github.com/user-attachments/assets/c4ee5d35-f406-43ff-82de-9c6794097deb" />
 
-Once expanded in edit mode, the following sections show the displah and formatting options:
+Once expanded in edit mode, the following sections show the display and formatting options:
 <img width="1704" height="557" alt="Style and Display Settings" src="https://github.com/user-attachments/assets/a0b9ecb3-8441-470f-9c36-c3341d346a74" />
 
-Once you are done, exit edit mode by pressing the now red "Edit Layout" button so that you can save or export your chart.  Enjoy!
+
+Once you are done, exit edit mode by pressing the now red "Edit Layout" button so that you can **Save** or **Export** your chart.  Enjoy!
 
