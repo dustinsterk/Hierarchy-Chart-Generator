@@ -4,7 +4,7 @@ This utility was created to allow for easy manipulation of any heirachial datase
 Once you load a .csv file or create a new chart, press the purple "Edit Layout" button to start editing...
 <img width="1720" height="783" alt="Main Screen" src="https://github.com/user-attachments/assets/10ff5a60-cb4d-4b8c-81ce-251a4b3d4cb0" />
 
-Features include:
+**Features include:**
 * Creation of a new chart from a blank canvas.
 * Loading data via .csv data file (see example dataset included or instructions on the main page for format).
 * Node font/size formatting for the entire tree.
